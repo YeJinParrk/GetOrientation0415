@@ -10,16 +10,12 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 public class AzimuthView extends View {
-
+    public int azimuth;
     Bitmap bitmap;
-
     public AzimuthView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.compass);
-
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -28,6 +24,8 @@ public class AzimuthView extends View {
 
         int x = cx - bitmap.getWidth()/2;
         int y = cy - bitmap.getHeight()/2;
+
+        canvas.rotate(-azimuth, getWidth()/2, getHeight()/2);
 
         canvas.drawBitmap(bitmap, x, y, null);
     }

@@ -1,11 +1,15 @@
 package com.example.getorientation0415;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtAzimuth, txtPitch, txtRoll;
     SensorManager sensorManager;
     Sensor magSensor, accSensor;
-    SensorEventListener Listner;
+    SensorEventListener Listener;
 
     float[] magValues, accValues;
 
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         magSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        Listner = new SensorEventListener() {
+        Listener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
 
@@ -80,12 +84,24 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        sensorManager.registerListener(Listner, magSensor, SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(Listner, accSensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(Listener, magSensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(Listener, accSensor, SensorManager.SENSOR_DELAY_UI);
 
     }
 
     private float radian2Degree(float radian) {
         return radian * 100 / (float) Math.PI;
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(Listener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(Listener,magSensor,SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(Listener,accSensor,SensorManager.SENSOR_DELAY_UI);
     }
 }
